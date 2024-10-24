@@ -2,3 +2,4 @@ defaults:
   - params
 
 experiment_name: "test_experiment"
+experiment_metadata_filepath: "experiment_metadata.txt"

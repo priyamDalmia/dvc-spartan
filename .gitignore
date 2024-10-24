@@ -168,3 +168,4 @@ temp/
 data/
 *.swp
 NOTES.md
+/experiment_metadata.txt

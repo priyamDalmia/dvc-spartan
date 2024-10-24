@@ -1,0 +1,25 @@
+ray:
+  init: True 
+  results_dir: "data/"
+
+tune:
+  num_trials: 3
+
+logging:
+  version: 1
+  disable_existing_loggers: False
+  formatters:
+    simple: 
+      format: "%(levelname)s: %(message)s"
+  handlers:
+    logfile:
+      class: logging.handlers.RotatingFileHandler
+      formatter: simple 
+      backupCount: 3
+      maxBytes: 100000
+      filename: "logs/${experiment_name}.log"
+  loggers: 
+    root:
+      level: DEBUG 
+      handlers:
+        - logfile

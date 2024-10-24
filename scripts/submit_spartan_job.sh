@@ -8,3 +8,15 @@ set -e
 
 SUBMISSION_BRANCH="dev"
 JOBS_BRANCH="jobs-spartan"
+
+# create new folder 
+
+# clone git branch 
+
+# checkout given revision 
+
+# setup extras 
+
+# run dvc experiments 
+
+# push results on failure 

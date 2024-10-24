@@ -1,0 +1,12 @@
+params:
+  - params.yaml
+
+stages:
+  tune:
+    cmd:
+      python3 core/workflows/tune_job.py
+    deps:
+      - core/workflows/tune_job.py
+    outs:
+      - ${ray.results_dir}/${experiment_name}/trials/
+      - ${ray.results_dir}/${experiment_name}/results.json

@@ -35,3 +35,43 @@ if [ -z "$REMOTE_SUBMISSION" ]; then
     echo "Error: remote for branch \'${JOB_SUBMISSION_BRANCH} \' not found"
     exit 1
 fi 
+
+# start sync and merge 
+# stash any local changes 
+git add --update 
+git stash push -u -m "stashing local changes for experiment $EXPERIMENT_NAME"
+
+# trap return to working branch if anything fails 
+# Ensure cleanup after job finishes, regardless of exit status
+function cleanup_job_dir(){
+    echo "Returning to working directory."
+    # checkout working dir 
+    git checkout ${JOB_WORKING_BRANCH}
+    echo "Reapplying changes to working branch"
+    git stash pop
+
+    # make a submission log
+    JOB_ID=$(tr -dc '0-9' < /dev/urandom | head -c 5)
+    echo "$(date %Y/%m/%d %H:%M:%SS),${EXPERIMENT_NAME},${JOB_ID}" >> $JOB_LOGS
+    echo "Job submitted!"
+}
+
+trap cleanup_job_dir EXIT
+
+# checkout remote branch 
+git checkout $JOB_SUBMISSION_BRANCH
+
+# merge with latest commit form submission branch 
+git merge --no-ff $JOB_WORKING_BRANCH -X theirs -m "prepare for submission"
+git stash apply
+
+# stage, commit and push to origin  
+git add -A 
+git commit -m "job: ${EXPERIMENT_NAME}"
+git push origin $JOB_SUBMISSION_BRANCH --force
+
+GIT_HASH==$(git log -1 --format="%H")
+# Create a temporary file
+TEMP_JOB_SCRIPT="${EXPERIMENT_NAME}_${JOB_SCRIPT}.sh"
+echo "Making submission to cluster"
+

@@ -24,6 +24,7 @@ JOB_LOGS="logs/submissions.log"
 git add --update 
 git stash push -u -m "stash for experiment $EXPERIMENT_NAME"
 git stash show -p > temp/${EXPERIMENT_NAME}.patch
+git stash pop 
 
 GIT_HASH==$(git log -1 --format="%H")
 # Create a temporary file

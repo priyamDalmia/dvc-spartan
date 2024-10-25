@@ -32,7 +32,7 @@ REMOTE_JOBS=$(git ls-remote --heads origin "$JOBS_BRANCH")
 if [ -z "$REMOTE_SUB" ]; then 
     echo "Error: remote for branch \'$SUBMISSION_BRANCH\' not found"
     exit 1
-fi 
+fi
 
 # Get the current date in the format YYYY-MM-DD
 DATE=$(date +"%Y-%m-%d")

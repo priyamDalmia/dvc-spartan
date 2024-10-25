@@ -23,7 +23,7 @@ JOB_LOGS="logs/submissions.log"
 # make a stash patch  
 git add --update 
 git stash push -u -m "stash for experiment $EXPERIMENT_NAME"
-git stash show -p > ${EXPERIMENT_NAME}.patch
+git stash show -p > temp/${EXPERIMENT_NAME}.patch
 
 GIT_HASH==$(git log -1 --format="%H")
 # Create a temporary file
@@ -32,7 +32,7 @@ TEMP_JOB_SCRIPT="${EXPERIMENT_NAME}_${JOB_SCRIPT}.sh"
 # copy job scripts to SPARTAN
 ssh spartan "mkdir -p $JOB_WORKING_DIR"
 scp scripts/$JOB_SCRIPT spartan:$JOB_BASE_DIR/$TEMP_JOB_SCRIPT
-scp scripts/${EXPERIMENT_NAME}.patch spartan:$JOB_BASE_DIR/
+scp temp/${EXPERIMENT_NAME}.patch spartan:$JOB_BASE_DIR/
 
 # submit jobs 
 ssh spartan \
@@ -42,6 +42,7 @@ ssh spartan \
     echo \"new experiment \${EXPERIMENT_NAME}\" >> ${EXPERIMENT_NAME}.log "
 
 # make a submission log
-JOB_ID=$(tr -dc '0-9' < /dev/urandom | head -c 5)
+JOB_ID=$RANDOM
 echo "$(date %Y/%m/%d %H:%M:%SS),${EXPERIMENT_NAME},${JOB_ID}" >> $JOB_LOGS
 echo "Job completed!"
+git stash pop 

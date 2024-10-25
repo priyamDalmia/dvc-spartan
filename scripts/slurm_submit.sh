@@ -2,44 +2,44 @@
 
 # exit on first fail
 set -exuo pipefail
-# build experiment level variables 
+# experiment variables 
 DATE=$(date +%Y%m%d)
 TIME=$(date +%H%M_%SS)
 EXPERIMENT_NAME="${DATE}_${TIME}"
-# job directory = spartan/../project/dalmiapriyam + project name 
-# get the current directory where script is called, ie project name
-JOB_HOME_DIR="/data/gpfs/projects/punim1355/dalmiapriyam/"
-JOB_BASE_DIR="$JOB_HOME_DIR/$(basename $PWD)"
-JOB_WORKING_DIR="$JOB_BASE_DIR/$EXPERIMENT_NAME"
-# job runs on working branch; which is copied from submission branch 
-JOB_SUBMISSION_BRANCH="dev"
-# slurm job script submitted to HPC 
-# TODO add conditions and select script by names
-# TODO; ensure that job scripts exists
-JOB_SCRIPT="spartan_cascade.sh"
-# job logs 
-JOB_LOGS="logs/submissions.log"
-GIT_HASH==$(git log -1 --format="%H")
+HOME_DIR="/data/gpfs/projects/punim1355/dalmiapriyam"
+PROJECT_DIR="$HOME_DIR/$(basename $PWD)"
+JOB_DIR="$PROJECT_DIR/$EXPERIMENT_NAME"
+JOB_BRANCH="dev"
+JOB_SCRIPT="spartan_test.sh"
+JOB_LOGS="submissions.log"
+JOB_GIT_HASH==$(git log -1 --format="%H")
+TEMP_JOB_SCRIPT=${EXPERIMENT_NAME}_${JOB_SCRIPT}
+JOB_PATCH=${EXPERIMENT_NAME}.patch
+SBATCH="/apps/slurm/latest/bin/sbatch"
+SCONTROL="/apps/slurm/latest/bin/scontrol"
+
+# TODO add check to see if we are on the same branch as job branch!  
 
 # make a stash patch
 git add --update 
 git stash push -u -m "stash for experiment $EXPERIMENT_NAME"
-git stash show -p > temp/${EXPERIMENT_NAME}.patch
+git stash show -p > temp/${JOB_PATCH}
 git stash pop 
 
 # copy job scripts to SPARTAN
-ssh spartan "mkdir -p $JOB_WORKING_DIR"
-scp scripts/$JOB_SCRIPT spartan:$JOB_BASE_DIR/$JOB_SCRIPT
-scp temp/${EXPERIMENT_NAME}.patch spartan:$JOB_BASE_DIR/
+ssh spartan "mkdir -p $JOB_DIR"
+scp scripts/$JOB_SCRIPT spartan:$PROJECT_DIR/$TEMP_JOB_SCRIPT
+scp temp/$JOB_PATCH spartan:$PROJECT_DIR/
 
 # submit jobs 
 ssh spartan \
     "source ~/.bashrc; \
-    cd ${JOB_BASE_DIR} && \
-    touch ${EXPERIMENT_NAME}.log && \
-    echo \"new experiment \${EXPERIMENT_NAME}\" >> ${EXPERIMENT_NAME}.log"
+    cd ${PROJECT_DIR} && \
+    JOB_STR=\$($SBATCH $TEMP_JOB_SCRIPT $EXPERIMENT_NAME $JOB_BRANCH $JOB_GIT_HASH) && \\
+    JOB_ID=\${JOB_STR//[!0-9]/} && \\
+    $SCONTROL update JobID=\$JOB_ID JobName=$EXPERIMENT_NAME && \\
+    echo "$EXPERIMENT_NAME,\$JOB_ID" >> $JOB_LOGS"
+    # echo \"\$(date +%Y/%m/%d) \$(date +%H:%M:%S),${EXPERIMENT_NAME},\${JOB_ID} >> $JOB_LOGS\""
 
-# make a submission log
-JOB_ID=$RANDOM
-echo "$(date +%Y/%m/%d) $(date +%H:%M:%S),${EXPERIMENT_NAME},${JOB_ID}" >> $JOB_LOGS
-echo "Job completed!"
+# copy submission log over
+scp spartan:$PROJECT_DIR/$JOB_LOGS ./logs/ 

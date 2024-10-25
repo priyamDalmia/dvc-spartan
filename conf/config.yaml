@@ -2,4 +2,5 @@ defaults:
   - params
 
 experiment_name: "test_experiment"
+new: "modified config"
 experiment_metadata_filepath: "experiment_metadata.txt"

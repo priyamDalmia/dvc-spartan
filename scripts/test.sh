@@ -51,7 +51,7 @@ function cleanup_job_dir(){
     git stash pop
 
     # make a submission log
-    JOB_ID=$(RANDOM)
+    JOB_ID=$(echo $RANDOM)
     echo "$(date %Y/%m/%d %H:%M:%SS),${EXPERIMENT_NAME},${JOB_ID}" >> $JOB_LOGS
     echo "Job submitted!"
 }

@@ -51,7 +51,7 @@ function cleanup_job_dir(){
     git stash pop
 
     # make a submission log
-    JOB_ID=$(tr -dc '0-9' < /dev/urandom | head -c 5)
+    JOB_ID=$(RANDOM)
     echo "$(date %Y/%m/%d %H:%M:%SS),${EXPERIMENT_NAME},${JOB_ID}" >> $JOB_LOGS
     echo "Job submitted!"
 }
@@ -62,7 +62,7 @@ trap cleanup_job_dir EXIT
 git checkout $JOB_SUBMISSION_BRANCH
 
 # merge with latest commit form submission branch 
-git merge --no-ff $JOB_WORKING_BRANCH -X theirs -m "prepare for submission"
+git merge --no-commit $JOB_WORKING_BRANCH -X theirs -m "prepare for submission"
 git stash apply
 
 # stage, commit and push to origin  

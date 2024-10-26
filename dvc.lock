@@ -1,0 +1,19 @@
+schema: '2.0'
+stages:
+  tune:
+    cmd: python3 core/workflows/tune_job.py
+    deps:
+    - path: core/workflows/tune_job.py
+      hash: md5
+      md5: 95f035dd3cc75a77f19e33db3bd2d09a
+      size: 1847
+    outs:
+    - path: data//no_name/results.json
+      hash: md5
+      md5: ba18b791f615753fb65925b31e427bb2
+      size: 198
+    - path: data//no_name/trials/
+      hash: md5
+      md5: 40f0c87e6576489190146c03e5193f90.dir
+      size: 147
+      nfiles: 3

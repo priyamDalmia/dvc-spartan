@@ -41,6 +41,7 @@ echo "Running script for experiment: ${EXPERIMENT_NAME}" >> logs.txt
 echo "Git hash for submission: ${GIT_HASH}"
 echo "Submission directory: $SLURM_SUBMIT_DIR"
 
+
 #   echo "Cleaning up the job directory."
 # export WORK_DIR="${RDVC_DIR:-${HOME}/.rdvc}"
 # Prepare a directory for the current job

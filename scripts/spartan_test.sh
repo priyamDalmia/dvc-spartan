@@ -29,6 +29,11 @@ export JOB_REPO_URL="git@github.com:priyamDalmia/dvc-spartan.git"
 export JOB_REPO_BRANCH=${JOB_BRANCH}
 export JOB_REPO_REV=${GIT_HASH}
 
+# purge modules 
+module purge 
+module load GCCcore/11.3.0; module load Python/3.10.4
+source .venv/bin/activate  
+
 # Ensure cleanup after job finishes, regardless of exit status
 function cleanup_job_dir(){
     echo "Cleaning up the job directory."
@@ -50,3 +55,6 @@ cd "${EXPERIMENT_NAME}"
 git checkout "${GIT_HASH}"
 git apply ${EXPERIMENT_NAME}.patch
 
+# run dvc experiment 
+dvc exp run --name $EXPERIMENT_NAME
+dvc exp push

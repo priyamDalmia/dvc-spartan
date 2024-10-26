@@ -1,17 +1,14 @@
-Launching a job on SPARTAN 
+## experimentation 
+
+1. each experiment will be a dvc pipeline. The pipeline will run for a certain time (with or without live logs) and print to main.  
 
 
-1. sync current rev and stash to the second branch. 
-2. make commit and push to remote (this version is used for the experiment).
-3. launch a script from a folder on spartan.
-   1. folder = SPARTAN = /data/gpfs/projects/punim1355/dalmiapriyam/dvc-spartan    
-4. create new folder with name of the job id.
-5. slurm log file in slurmoutput; use s (or stail) for running logs.
-6. view logs for results. 
+## scripts 
 
-
-
-5. pull the code from the branch and revision.
-6. run the experiment. 
-7. upload the files.
-8. send success message!  
+1. `slurm_submit` - will submit a slurm script to SPARTAN. 
+    - builds a name for the experiment
+    - builds experiment dir in project dir 
+    - creates a patch from current workspace, includes untracked!
+    - scp patch, job script to project dir 
+    - submits job scripts from project dir 
+    - transfers submission log 

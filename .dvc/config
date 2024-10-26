@@ -1,2 +1,6 @@
 [hydra]
-    enabled = False
+    enabled = True
+[core]
+    remote = spartan
+['remote "spartan"']
+    url = ssh://spartan/data/gpfs/projects/punim1355/dalmiapriyam/dvc-spartan/dvc-data

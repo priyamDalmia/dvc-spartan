@@ -12,7 +12,7 @@ JOB_DIR="$PROJECT_DIR/$EXPERIMENT_NAME"
 JOB_BRANCH="dev"
 JOB_SCRIPT="spartan_test.sh"
 JOB_LOGS="submissions.log"
-JOB_GIT_HASH==$(git log -1 --format="%H")
+JOB_GIT_HASH=$(git log -1 --format="%H")
 TEMP_JOB_SCRIPT=${EXPERIMENT_NAME}_${JOB_SCRIPT}
 JOB_PATCH=${EXPERIMENT_NAME}.patch
 SBATCH="/apps/slurm/latest/bin/sbatch"

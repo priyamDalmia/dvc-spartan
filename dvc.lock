@@ -10,10 +10,10 @@ stages:
     outs:
     - path: data//no_name/results.json
       hash: md5
-      md5: ba18b791f615753fb65925b31e427bb2
-      size: 198
+      md5: 9aa7cae36675832fc0d8c6b5fdf75926
+      size: 199
     - path: data//no_name/trials/
       hash: md5
-      md5: 40f0c87e6576489190146c03e5193f90.dir
-      size: 147
+      md5: c00e3a499340d53ae352612407223e72.dir
+      size: 148
       nfiles: 3

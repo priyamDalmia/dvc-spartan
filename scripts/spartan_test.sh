@@ -2,8 +2,6 @@
 #SBATCH --output="slurmoutput/%j.out"
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=p.dalmia@unimelb.edu.au
-
-# resources
 #SBATCH --nodes=1
 #SBTACH --ntasks=1
 #SBATCH --ntasks-per-node=1
@@ -11,6 +9,13 @@
 #SBATCH --mem-per-cpu=4G
 #SBATCH --partition=cascade
 #SBATCH --time=01:00:00
+
+source "${HOME}/.bashrc"
+# purge modules 
+module purge 
+module load GCCcore/11.3.0
+module load Python/3.10.4
+source .venv/bin/activate  
 
 EXPERIMENT_NAME=$1
 JOB_BRANCH=$2
@@ -20,19 +25,11 @@ echo "$(date +%Y/%m/%d) $(date +%H:%M:%S)"
 echo "Running Experiment $EXPERIMENT_NAME on branch $JOB_BRANCH and revision $GIT_HASH at $PWD"
 
 
-source "${HOME}/.bashrc"
-set -euxo pipefail
-
 export JOB_SUBMISSION_DIR=$PWD
 export JOB_REPO_NAME="dvc-spartan"
 export JOB_REPO_URL="git@github.com:priyamDalmia/dvc-spartan.git"
 export JOB_REPO_BRANCH=${JOB_BRANCH}
 export JOB_REPO_REV=${GIT_HASH}
-
-# purge modules 
-module purge 
-module load GCCcore/11.3.0; module load Python/3.10.4
-source .venv/bin/activate  
 
 # Ensure cleanup after job finishes, regardless of exit status
 function cleanup_job_dir(){
@@ -42,7 +39,7 @@ function cleanup_job_dir(){
     rm -rf ${EXPERIMENT_NAME}
 }
 
-trap cleanup_job_dir EXIT
+# trap cleanup_job_dir EXIT
 
 # Create an insulated Git workspace for the current job
 # TODO make secure by using HTTP tokens instead 
@@ -56,5 +53,7 @@ git checkout "${GIT_HASH}"
 git apply ${EXPERIMENT_NAME}.patch
 
 # run dvc experiment 
+module list
+echo "List of modules in env: $(module list)"
 dvc exp run --name $EXPERIMENT_NAME
 dvc exp push

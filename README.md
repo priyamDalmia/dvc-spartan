@@ -1,7 +1,9 @@
-## experimentation 
+## pipelines 
 
-1. each experiment will be a dvc pipeline. The pipeline will run for a certain time (with or without live logs) and print to main.  
-
+1. tuning a "partially"-specified algorithm. 
+    - runs a tune job with a given trainable 
+    - saves tune results to experiment dir / data / experiment name
+    - builds a metrics json for  
 
 ## scripts 
 
@@ -12,3 +14,10 @@
     - scp patch, job script to project dir 
     - submits job scripts from project dir 
     - transfers submission log 
+
+2. `job_script` - will run an experiment on SPARTAN. 
+    - clone the project in the experiment dir
+    - apply the patch
+    - run dvc pipeline as experiment 
+    - save exp
+    - cleanup 

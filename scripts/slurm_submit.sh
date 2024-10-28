@@ -31,15 +31,18 @@ ssh spartan "mkdir -p $JOB_DIR"
 scp scripts/$JOB_SCRIPT spartan:$PROJECT_DIR/$TEMP_JOB_SCRIPT
 scp temp/$JOB_PATCH spartan:$PROJECT_DIR/
 
-# submit jobs 
-ssh spartan \
-    "source ~/.bashrc; \
-    cd ${PROJECT_DIR} && \
-    JOB_STR=\$($SBATCH $TEMP_JOB_SCRIPT $EXPERIMENT_NAME $JOB_BRANCH $JOB_GIT_HASH) && \\
-    JOB_ID=\${JOB_STR//[!0-9]/} && \\
-    $SCONTROL update JobID=\$JOB_ID JobName=$EXPERIMENT_NAME && \\
-    echo "$EXPERIMENT_NAME,\$JOB_ID" >> $JOB_LOGS"
+# submit jobs
+commandstr="cd $PROJECT_DIR && echo \$PATH && JOB_STR=\$(sbatch $TEMP_JOB_SCRIPT $EXPERIMENT_NAME $JOB_BRANCH $JOB_GIT_HASH) && JOB_ID=\${JOB_STR//[!0-9]/} && scontrol update JobID=\$JOB_ID JobName=$EXPERIMENT_NAME && echo "$EXPERIMENT_NAME,\$JOB_ID" >> $JOB_LOGS" 
+ssh spartan -t "bash -l -c '${commandstr}'"
+# ssh spartan \
+#     "source ~/.bashrc; \
+#     cd ${PROJECT_DIR} && \
+#     JOB_STR=\$($SBATCH $TEMP_JOB_SCRIPT $EXPERIMENT_NAME $JOB_BRANCH $JOB_GIT_HASH) && \\
+#     JOB_ID=\${JOB_STR//[!0-9]/} && \\
+#     $SCONTROL update JobID=\$JOB_ID JobName=$EXPERIMENT_NAME && \\
+#     echo "$EXPERIMENT_NAME,\$JOB_ID" >> $JOB_LOGS"
     # echo \"\$(date +%Y/%m/%d) \$(date +%H:%M:%S),${EXPERIMENT_NAME},\${JOB_ID} >> $JOB_LOGS\""
 
 # copy submission log over
 scp spartan:$PROJECT_DIR/$JOB_LOGS ./logs/ 
+cat ./logs/$JOB_LOGS

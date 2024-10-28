@@ -26,29 +26,29 @@ docs = [
 # Documentation = "https://github.com/microsoft/python-package-template/tree/main#readme"
 # Source = "https://github.com/priyamDalmia/causal-marl.git"
 
-[tool.black]
-line-length = 88
-fast = true
+# [tool.black]
+# line-length = 88
+# fast = true
 
-[tool.flake8]
-max-line-length = 88 
-select = "F,E,W,B,B901,B902,B903"
-exclude = [
-    ".eggs",
-    ".git",
-    ".tox",
-    ".venv",
-    "nssm",
-    "obj",
-    "out",
-    "packages",
-    "pywin32",
-    "tests",
-    "swagger_client"
-]
-ignore = [
-    "E722",
-    "B001",
-    "W503",
-    "E203"
-]
+# [tool.flake8]
+# max-line-length = 88 
+# select = "F,E,W,B,B901,B902,B903"
+# exclude = [
+#     ".eggs",
+#     ".git",
+#     ".tox",
+#     ".venv",
+#     "nssm",
+#     "obj",
+#     "out",
+#     "packages",
+#     "pywin32",
+#     "tests",
+#     "swagger_client"
+# ]
+# ignore = [
+#     "E722",
+#     "B001",
+#     "W503",
+#     "E203"
+# ]

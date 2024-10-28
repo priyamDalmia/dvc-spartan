@@ -4,9 +4,8 @@ params:
 stages:
   tune:
     cmd:
-      python3 core/workflows/tune_job.py
+      python3 core/workflows/ray_tune_rllib.py
     deps:
-      - core/workflows/tune_job.py
-    outs:
-      - ${ray.results_dir}/${experiment_name}/trials/
-      - ${ray.results_dir}/${experiment_name}/results.json
+      - core/workflows/ray_tune_rllib.py
+    # outs:
+      # - ${ray.results_dir}/${experiment_name}/results.json
